@@ -1,0 +1,8 @@
+baostock
+akshare
+pandas
+numpy
+scikit-learn
+statsmodels
+torch
+tabulate

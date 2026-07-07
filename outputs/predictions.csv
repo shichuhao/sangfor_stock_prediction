@@ -1,0 +1,8 @@
+﻿issued_date,last_close,model,pred_close,pred_direction,pred_pct_change,target_date,actual_close,actual_direction,correct,abs_error
+2026-07-07,88.8,random_walk,88.8,-1,0.0,,,,,
+2026-07-07,88.8,moving_average,92.294,1,3.934684684684685,,,,,
+2026-07-07,88.8,arima,88.57896137654903,-1,-0.24891736875108736,,,,,
+2026-07-07,88.8,random_forest,88.8418037263501,-1,0.04707626841226754,,,,,
+2026-07-07,88.8,lstm_univariate,88.9037415985465,1,0.1168261244893074,,,,,
+2026-07-07,88.8,lstm_multivariate,88.82745965176821,1,0.030923031270503998,,,,,
+2026-07-07,88.8,sentiment,87.91199999999999,-1,-1.0,,,,,
