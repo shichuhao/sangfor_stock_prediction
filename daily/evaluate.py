@@ -45,11 +45,13 @@ def evaluate_pending_predictions():
         pred_direction = int(float(preds.at[idx, "pred_direction"]))
         pred_close = float(preds.at[idx, "pred_close"])
 
+        # 这一列是 pandas 3.0 的严格字符串dtype(由上面 dtype=str 读入产生),
+        # 直接赋值 float/int 会报 "Invalid value ... for dtype 'str'",必须显式转成 str 再赋值
         preds.at[idx, "target_date"] = target_date.strftime("%Y-%m-%d")
-        preds.at[idx, "actual_close"] = actual_close
-        preds.at[idx, "actual_direction"] = actual_direction
-        preds.at[idx, "correct"] = int(pred_direction == actual_direction)
-        preds.at[idx, "abs_error"] = abs(pred_close - actual_close)
+        preds.at[idx, "actual_close"] = str(actual_close)
+        preds.at[idx, "actual_direction"] = str(actual_direction)
+        preds.at[idx, "correct"] = str(int(pred_direction == actual_direction))
+        preds.at[idx, "abs_error"] = str(abs(pred_close - actual_close))
 
     preds.to_csv(config.PREDICTIONS_CSV, index=False, encoding="utf-8-sig")
     return preds
