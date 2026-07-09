@@ -45,6 +45,7 @@ reports/
   generate_report.py       # 汇总回测+实盘结果 → reports/accuracy_report.md
 .github/workflows/
   daily_predict.yml        # 每个交易日收盘后自动跑 predict → evaluate → report → commit
+  monthly_backtest.yml     # 每月1号自动用最新全部历史重跑一次完整walk-forward回测
 ```
 
 ## 本地运行
@@ -92,9 +93,16 @@ python reports/generate_report.py
    期间用最新数据窗口做推理,这也更贴近真实生产环境"定期重训+每日推理"的做法。
 5. **实盘追踪样本随时间积累**: 需要 GitHub Actions 连续运行数周才能积累到有统计意义的样本量,
    项目上线初期该部分结论的置信度较低。
+6. **历史回测本身不是每天重跑的**: `backtest/run_backtest.py` 完整跑一遍约耗时10-20分钟,不适合放进
+   每日流程。`reports/accuracy_report.md` 第2节"历史回测结果"是按月刷新的静态基准(见下方 GitHub
+   Actions 说明);报告第1节"累计评估结果"把这个静态基准和每天新增的实盘追踪记录拼接起来,
+   是唯一会随每天运行持续增长、覆盖最新交易日的整体指标。
 
 ## GitHub Actions
 
-`.github/workflows/daily_predict.yml` 在每个工作日北京时间16:35(A股收盘后)自动:
-拉取最新数据 → 对下一交易日发出预测 → 回填上一次预测的实际结果 → 重新生成报告 → 提交回仓库。
-使用默认的 `GITHUB_TOKEN`,无需额外配置密钥。
+- `.github/workflows/daily_predict.yml`: 每个工作日北京时间16:35(A股收盘后)自动
+  拉取最新数据 → 对下一交易日发出预测 → 回填上一次预测的实际结果 → 重新生成报告 → 提交回仓库。
+- `.github/workflows/monthly_backtest.yml`: 每月1号自动用最新全部历史重新训练并跑一遍完整的
+  walk-forward历史回测,刷新报告第2节的静态基准表。
+
+两者都使用默认的 `GITHUB_TOKEN`,无需额外配置密钥。
